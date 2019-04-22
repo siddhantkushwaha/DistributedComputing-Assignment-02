@@ -1,3 +1,4 @@
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -23,7 +24,10 @@ public class Search extends Configured implements Tool {
 
     public int run(String[] args) throws Exception {
 
-        Job job = Job.getInstance(getConf(), "job_search");
+        Configuration configuration = new Configuration();
+        configuration.set("query", args[2]);
+
+        Job job = Job.getInstance(configuration, "job_search");
         job.setJarByClass(this.getClass());
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
@@ -41,10 +45,14 @@ public class Search extends Configured implements Tool {
 
         @Override
         public void map(LongWritable offset, Text lineText, Context context) throws IOException, InterruptedException {
+
+            Configuration configuration = context.getConfiguration();
+            String query = configuration.get("query");
+
             String line = lineText.toString();
             String sentence = line.split(",")[2].replaceAll("^\"|\"$", "");
 
-            if (sentence.contains("khan")) {
+            if (sentence.contains(query)) {
                 Text sentenceText = new Text(sentence);
                 context.write(NullWritable.get(), sentenceText);
             }
