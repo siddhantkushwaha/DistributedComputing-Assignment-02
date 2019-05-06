@@ -9,7 +9,7 @@ This project is built via maven and uses Hadoop v2.6.0. An **artifact/jar** file
 
 `hadoop jar dcassign02.jar Search dcassign02/input dcassign02/search/output politics`
 
-In the above command, the third argument is the query whereas the first and second argument are input and output directories respectively. 
+In the above command, the third argument is the query whereas the first and second argument are input and output directories HDFS respectively. 
 
 ## Working
 
